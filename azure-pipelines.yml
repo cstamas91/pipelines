@@ -13,6 +13,8 @@ variables:
   solution:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
+  major: 1
+  minor: 0
   
 steps:
 - task: DotnetCoreCLI@2
@@ -21,7 +23,7 @@ steps:
     command: 'publish'
     projects: '$(solution)'
     workingDirectory: '$(System.DefaultWorkingDirectory)'
-    arguments: '--no-restore --configuration $(buildConfiguration) /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:PackageLocation="$(Build.ArtifactStagingDirectory)"'
+    arguments: '--no-restore --configuration $(buildConfiguration) /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:PackageLocation="$(Build.ArtifactStagingDirectory)" /p:VersionPrefix=$(major).$(minor).$(Build.BuildNumber) /p:VersionSuffix=$(Build.SourceBranchName)'
     publishWebProjects: false
       
       
