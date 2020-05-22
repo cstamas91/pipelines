@@ -1,0 +1,36 @@
+﻿trigger:
+  branches:
+    include:
+      - develop
+      - features/*
+    exclude:
+      - master
+        
+pool:
+  vmImage: 'windows-latest'
+  
+variables:
+  solution:
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+  
+steps:
+- task: DotnetCoreCLI@2
+  displayName: 'Create $(solution) publish package'
+  inputs:
+    command: 'publish'
+    projects: '$(solution)'
+    workingDirectory: '$(System.DefaultWorkingDirectory)'
+    arguments: '--no-restore --configuration $(buildConfiguration) /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:PackageLocation="$(Build.ArtifactStagingDirectory)"'
+    publishWebProjects: false
+      
+      
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish artifacts'
+  inputs:
+    ArtifactName: 'pipeline.artifact'
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      
+
+      
+      
