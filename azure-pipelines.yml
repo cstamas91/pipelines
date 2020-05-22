@@ -10,7 +10,7 @@ pool:
   vmImage: 'windows-latest'
   
 variables:
-  solution:
+  solution: 'Pipelines.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
   major: 1
