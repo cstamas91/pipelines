@@ -10,7 +10,6 @@ pool:
   vmImage: 'windows-latest'
   
 variables:
-  solution: 'Pipelines.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
   major: 1
@@ -21,7 +20,7 @@ steps:
   displayName: 'Create $(solution) publish package'
   inputs:
     command: 'publish'
-    projects: '$(solution)'
+    projects: '**/Pipelines.Web.csproj'
     workingDirectory: '$(System.DefaultWorkingDirectory)'
     arguments: '--configuration $(buildConfiguration) /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:PackageLocation="$(Build.ArtifactStagingDirectory)" /p:VersionPrefix=$(major).$(minor).$(Build.BuildNumber) /p:VersionSuffix=$(Build.SourceBranchName)'
     publishWebProjects: false
