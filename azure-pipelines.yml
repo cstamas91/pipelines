@@ -21,8 +21,14 @@ steps:
     targetType: inline
     script: |
       docker build -t pipelines .\src\Pipelines.Web --build-arg PREFIX=$(major).$(minor).$(Build.BuildId) SUFFIX=$(Build.SourceBranchName)
-      docker tag pipelines cstcontainers.azurecr.io/pipelines:latest
-      docker push cstcontainers.azurecr.io/pipelines:latest
+      docker tag pipelines cstcontainers.azurecr.io/pipelines
+      
+- task: Docker@2
+  inputs:
+    command: push
+    containerRegistry: cstcontainers
+    repository: pipelines
+    tags: $(major).$(minor).$(Build.BuildId)-$(Build.SourceBranchName)
 
 # - task: PublishBuildArtifacts@1
 #   displayName: 'Publish artifacts'
