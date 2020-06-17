@@ -21,6 +21,7 @@ steps:
     command: build
     Dockerfile: .\src\Pipelines.Web\Dockerfile
     arguments: --build-arg PREFIX=$(major).$(minor).$(Build.BuildId) --build-arg SUFFIX=$(Build.SourceBranchName)
+    containerRegistry: cstcontainers
     repository: cst/pipelines
 
 - task: Docker@2
