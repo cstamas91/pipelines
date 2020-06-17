@@ -24,8 +24,7 @@ steps:
     workingDirectory: '$(System.DefaultWorkingDirectory)'
     arguments: '--configuration $(buildConfiguration) /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:PackageLocation="$(Build.ArtifactStagingDirectory)" /p:VersionPrefix=$(major).$(minor).$(Build.BuildId) /p:VersionSuffix=$(Build.SourceBranchName)'
     publishWebProjects: false
-      
-      
+
 - task: PublishBuildArtifacts@1
   displayName: 'Publish artifacts'
   inputs:
