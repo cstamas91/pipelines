@@ -19,8 +19,9 @@ steps:
 - task: PowerShell@2
   inputs:
     targetType: inline
+    workingDirectory: .\src\Pipelines.Web\
     script: |
-      docker build -t pipelines .\src\Pipelines.Web --build-arg PREFIX=$(major).$(minor).$(Build.BuildId) SUFFIX=$(Build.SourceBranchName)
+      docker build -t pipelines . --build-arg PREFIX=$(major).$(minor).$(Build.BuildId) SUFFIX=$(Build.SourceBranchName)
       docker tag pipelines cstcontainers.azurecr.io/pipelines
       
 - task: Docker@2
