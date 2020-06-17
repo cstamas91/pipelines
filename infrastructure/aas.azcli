@@ -1,0 +1,1 @@
+az webapp create --resource-group Demo --plan Demo --name cstapp -i cstcontainers.azurecr.io/pipelines:latest

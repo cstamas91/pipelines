@@ -16,21 +16,16 @@ variables:
   minor: 0
   
 steps:
-- task: DotnetCoreCLI@2
-  displayName: 'Create $(solution) publish package'
+- task: PowerShell@2
   inputs:
-    command: 'publish'
-    projects: '**/Pipelines.Web.csproj'
-    workingDirectory: '$(System.DefaultWorkingDirectory)'
-    arguments: '--configuration $(buildConfiguration) /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:PackageLocation="$(Build.ArtifactStagingDirectory)" /p:VersionPrefix=$(major).$(minor).$(Build.BuildId) /p:VersionSuffix=$(Build.SourceBranchName)'
-    publishWebProjects: false
+    targetType: inline
+    script: |
+      docker build -t pipelines .\src\Pipelines.Web --build-arg PREFIX=$(major).$(minor).$(Build.BuildId) SUFFIX=$(Build.SourceBranchName)
+      docker tag pipelines cstcontainers.azurecr.io/pipelines:latest
+      docker push cstcontainers.azurecr.io/pipelines:latest
 
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish artifacts'
-  inputs:
-    ArtifactName: 'pipeline.artifact'
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-      
-
-      
-      
+# - task: PublishBuildArtifacts@1
+#   displayName: 'Publish artifacts'
+#   inputs:
+#     ArtifactName: 'pipeline.artifact'
+#     PathtoPublish: '$(Build.ArtifactStagingDirectory)'      
