@@ -22,6 +22,7 @@ steps:
     Dockerfile: .\src\Pipelines.Web\Dockerfile
     arguments: --build-arg PREFIX=$(major).$(minor).$(Build.BuildId) --build-arg SUFFIX=$(Build.SourceBranchName)
     repository: pipelines
+    tags: $(major).$(minor).$(Build.BuildId)-$(Build.SourceBranchName)
 
 - task: Docker@2
   inputs:
