@@ -21,13 +21,13 @@ steps:
     command: build
     Dockerfile: .\src\Pipelines.Web\Dockerfile
     arguments: --build-arg PREFIX=$(major).$(minor).$(Build.BuildId) --build-arg SUFFIX=$(Build.SourceBranchName)
-    repository: pipelines
+    repository: cst/pipelines
 
 - task: Docker@2
   inputs:
     command: push
     containerRegistry: cstcontainers
-    repository: pipelines
+    repository: cst/pipelines
     tags: $(Build.BuildId)
 
 # - task: PublishBuildArtifacts@1
