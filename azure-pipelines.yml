@@ -30,9 +30,14 @@ steps:
     containerRegistry: cstcontainers
     repository: cst/pipelines
     tags: $(Build.BuildId)
+    
+- task: CopyFiles@2
+  inputs:
+    targetFolder: $(Build.ArtifactStagingDirectory)
+    contents: infrastructure/
 
-# - task: PublishBuildArtifacts@1
-#   displayName: 'Publish artifacts'
-#   inputs:
-#     ArtifactName: 'pipeline.artifact'
-#     PathtoPublish: '$(Build.ArtifactStagingDirectory)'      
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish artifacts'
+  inputs:
+    ArtifactName: 'pipeline.artifact'
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'      
