@@ -20,15 +20,22 @@ steps:
   inputs:
     command: build
     Dockerfile: .\src\Pipelines.Web\Dockerfile
-    arguments: --build-arg PREFIX=$(major).$(minor).$(Build.BuildId) --build-arg SUFFIX=$(Build.SourceBranchName)
+    arguments: --build-arg PREFIX=$(major).$(minor).$(Build.BuildId) --build-arg SUFFIX=$(Build.SourceBranchName) -t $(major).$(minor).$(Build.BuildId)-$(Build.SourceBranchName)
     containerRegistry: cstcontainers
-    repository: cst/pipelines
+    repository: pipelines
 
 - task: Docker@2
   inputs:
     command: push
     containerRegistry: cstcontainers
-    repository: cst/pipelines
+    repository: pipelines
+    tags: $(Build.BuildId)
+
+- task: Docker@2
+  inputs:
+    command: push
+    containerRegistry: cstamas91_dockerhub
+    repository: pipelines
     tags: $(Build.BuildId)
     
 - task: CopyFiles@2
