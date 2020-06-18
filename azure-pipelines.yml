@@ -14,39 +14,31 @@ variables:
   buildConfiguration: 'Release'
   major: 1
   minor: 0
-  imageTag: $(major).$(minor).$(Build.BuildId)-$(Build.SourceBranchName)
+  prefix: $(major).$(minor).$(Build.BuildId)
+  suffix: $(Build.SourceBranchName)
+  imageTag: $(prefix)-$(suffix)
+
   
 steps:
-- task: Docker@2
-  inputs:
-    command: build
-    Dockerfile: .\src\Pipelines.Web\Dockerfile
-    arguments: --build-arg PREFIX=$(major).$(minor).$(Build.BuildId) --build-arg SUFFIX=$(Build.SourceBranchName) -t $(imageTag)
-    containerRegistry: cstcontainers
-    repository: pipelines
-    tags: $(imageTag)
+# - task: Docker@2
+#   inputs:
+#     command: build
+#     Dockerfile: .\src\Pipelines.Web\Dockerfile
+#     arguments: --build-arg PREFIX=$(major).$(minor).$(Build.BuildId) --build-arg SUFFIX=$(Build.SourceBranchName) -t $(imageTag)
+#     containerRegistry: cstcontainers
+#     repository: pipelines
+#     tags: $(imageTag)
 
-- task: Docker@2
+- task: PowerShell@2
   inputs:
-    command: push
-    containerRegistry: cstcontainers
-    repository: pipelines
-    tags: $(imageTag)
+    targetType: inline
+    workingDirectory: .\src\Pipelines.Web\
+    script: |
+      docker build -t cstamas91/pipelines:$(imageTag) --build-arg PREFIX=$(prefix) --build-arg SUFFIX=$(suffix) .
 
 - task: Docker@2
   inputs:
     command: push
     containerRegistry: cstamas91_dockerhub
-    repository: pipelines
+    repository: cstamas91/pipelines
     tags: $(imageTag)
-    
-# - task: CopyFiles@2
-#   inputs:
-#     targetFolder: $(Build.ArtifactStagingDirectory)
-#     contents: infrastructure/*
-
-# - task: PublishBuildArtifacts@1
-#   displayName: 'Publish artifacts'
-#   inputs:
-#     ArtifactName: 'pipeline.artifact'
-#     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
