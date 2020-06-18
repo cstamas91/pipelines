@@ -7,7 +7,7 @@ COPY *.csproj ./
 RUN dotnet restore
 
 COPY . ./
-RUN dotnet publish -c Release -o out /p:VersionPrefix=%PREFIX% /p:VersionSuffix=%SUFFIX%
+RUN dotnet publish -c Release -o out /p:VersionPrefix=$PREFIX /p:VersionSuffix=$SUFFIX
 
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
 WORKDIR /app
