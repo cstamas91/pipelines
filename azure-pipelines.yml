@@ -14,37 +14,39 @@ variables:
   buildConfiguration: 'Release'
   major: 1
   minor: 0
+  imageTag: $(major).$(minor).$(Build.BuildId)-$(Build.SourceBranchName)
   
 steps:
 - task: Docker@2
   inputs:
     command: build
     Dockerfile: .\src\Pipelines.Web\Dockerfile
-    arguments: --build-arg PREFIX=$(major).$(minor).$(Build.BuildId) --build-arg SUFFIX=$(Build.SourceBranchName) -t $(major).$(minor).$(Build.BuildId)-$(Build.SourceBranchName)
+    arguments: --build-arg PREFIX=$(major).$(minor).$(Build.BuildId) --build-arg SUFFIX=$(Build.SourceBranchName) -t $(imageTag)
     containerRegistry: cstcontainers
     repository: pipelines
+    tags: $(imageTag)
 
 - task: Docker@2
   inputs:
     command: push
     containerRegistry: cstcontainers
     repository: pipelines
-    tags: $(Build.BuildId)
+    tags: $(imageTag)
 
 - task: Docker@2
   inputs:
     command: push
     containerRegistry: cstamas91_dockerhub
     repository: pipelines
-    tags: $(Build.BuildId)
+    tags: $(imageTag)
     
-- task: CopyFiles@2
-  inputs:
-    targetFolder: $(Build.ArtifactStagingDirectory)
-    contents: infrastructure/*
+# - task: CopyFiles@2
+#   inputs:
+#     targetFolder: $(Build.ArtifactStagingDirectory)
+#     contents: infrastructure/*
 
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish artifacts'
-  inputs:
-    ArtifactName: 'pipeline.artifact'
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'      
+# - task: PublishBuildArtifacts@1
+#   displayName: 'Publish artifacts'
+#   inputs:
+#     ArtifactName: 'pipeline.artifact'
+#     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
